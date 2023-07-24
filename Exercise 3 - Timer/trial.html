@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>The Timer</title>
+</head>
+<body>
+  <h1>Exercise 3-Timer</h1>
+  <p id="timer-display">00</p>
+  <button id="add-button">+</button>
+  <button id="subtract-button">-</button>
+  <button id="reset-button">Reset</button>
+  <button id="start-stop-button">Start</button> 
+
+  <script>
+    let timeInSeconds = 0;
+    let countdownInterval;
+    let isCounting = false;
+
+    function updateDisplay() {
+      const hours = Math.floor(timeInSeconds / 3600);
+      const minutes = Math.floor((timeInSeconds % 3600) / 60);
+      const seconds = timeInSeconds % 60;
+      const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+      document.getElementById('timer-display').textContent = formattedTime;
+    }
+
+    function addOneSecond() {
+      if (!isCounting) {
+        timeInSeconds += 1;
+        updateDisplay();
+      }
+    }
+
+    function subtractOneSecond() {
+      if (!isCounting) {
+        timeInSeconds = Math.max(timeInSeconds - 1, 0);
+        updateDisplay();
+      }
+    }
+
+    function resetTimer() {
+      if (!isCounting) {
+        timeInSeconds = 0;
+        updateDisplay();
+      }
+    }
+
+    function toggleCountdown() {
+      if (isCounting) {
+        clearInterval(countdownInterval);
+        document.getElementById('start-stop-button').textContent = 'Start';
+      } else {
+        document.getElementById('start-stop-button').textContent = 'Stop';
+        countdownInterval = setInterval(function () {
+          timeInSeconds = Math.max(timeInSeconds - 1, 0);
+          updateDisplay();
+          if (timeInSeconds === 0) {
+            clearInterval(countdownInterval);
+            document.getElementById('start-stop-button').textContent = 'Start';
+          }
+        }, 1000);
+      }
+      isCounting = !isCounting;
+    }
+
+    document.getElementById('add-button').addEventListener('click', addOneSecond);
+    document.getElementById('subtract-button').addEventListener('click', subtractOneSecond);
+    document.getElementById('reset-button').addEventListener('click', resetTimer);
+    document.getElementById('start-stop-button').addEventListener('click', toggleCountdown);
+  </script>
+</body>
+</html>
